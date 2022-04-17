@@ -7,8 +7,7 @@ const router = express.Router();
 const verifyToken = (req, res, next) => {
   try {
     const header = req.headers.auth;
-    console.log(req.headers);
-    console.log(header);
+   
     const token = header.split(" ")[1];
     const isUser = jwt.verify(token, config.JWT_SECRET);
     if (!isUser.userID) {

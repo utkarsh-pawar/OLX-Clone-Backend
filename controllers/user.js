@@ -54,10 +54,9 @@ export const login = async (req, res) => {
     if (!email && !number) {
       return res.status(400).json("enter all required fields");
     }
-    
-    if(!password){
-     return res.status(400).json("enter all required fields");
 
+    if (!password) {
+      return res.status(400).json("enter all required fields");
     }
 
     if (number) {
