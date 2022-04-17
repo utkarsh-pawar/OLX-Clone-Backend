@@ -38,7 +38,6 @@ export const addItem = async (req, res) => {
       return res.status(400).json("enter all the required fields!!!");
     }
     const imgArr = [];
-  
 
     await req.files.map((file) => imgArr.push(file.location));
 
@@ -67,7 +66,7 @@ export const buyItem = async (req, res) => {
     const item = await Item.findById({ _id: mongoose.Types.ObjectId(itemID) });
 
     if (item.userID == req.user.userID) {
-      return res.status(400).json("you are authorized to do that.");
+      return res.status(400).json("you can't buy your own stuff man!!");
     }
 
     const updatedItem = await Item.findByIdAndUpdate(
@@ -99,5 +98,18 @@ export const getMyItems = async (req, res) => {
     response.message = e.message || e;
     response.error = e;
     res.status(400).json(response);
+  }
+};
+
+export const itemsBought = async (req, res) => {
+  try {
+    const { userID } = req.user;
+
+    const items = await Item.find({ bought_by: userID });
+    const response = { ...defaultResponseObject };
+    response.data = items;
+    res.status(200).json(response);
+  } catch (e) {
+    res.status(400).json(e.message);
   }
 };
