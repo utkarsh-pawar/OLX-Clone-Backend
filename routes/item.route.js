@@ -15,6 +15,6 @@ router.post(
 );
 router.post("/buyitem", verifyToken, itemController.buyItem);
 router.post("/myitems", verifyToken, itemController.getMyItems);
-router.get("/itemsbought",verifyToken,itemController.itemsBought)
+router.post("/itemsbought", verifyToken, itemController.itemsBought);
 
 export default router;
