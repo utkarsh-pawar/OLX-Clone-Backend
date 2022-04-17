@@ -34,8 +34,11 @@ export const getItem = async (req, res) => {
 export const addItem = async (req, res) => {
   try {
     const { name, price, description } = req.body;
+    if (!name || !price || !description) {
+      return res.status(400).json("enter all the required fields!!!");
+    }
     const imgArr = [];
-    console.log(req);
+  
 
     await req.files.map((file) => imgArr.push(file.location));
 
