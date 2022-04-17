@@ -50,44 +50,49 @@ export const signup = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, number } = req.body;
+    if (!email && !number) {
+      return res.status(400).json("enter all required fields");
+    }
+    
+    if(!password){
+     return res.status(400).json("enter all required fields");
 
-    const user = await User.findOne({ email: email });
-    const compare = await bcrypt.compare(password, user.password);
-    console.log(email, password);
-
-    if (!compare) {
-      return res.status(400).json("invalid credentials");
     }
 
-    const token = jwt.sign({ userID: user._id }, config.JWT_SECRET, {
-      expiresIn: "2 days",
-    });
+    if (number) {
+      const findByNumber = await User.findOne({ contact_no: number });
+      if (!findByNumber) {
+        return res.status(404).json("no user with given number found");
+      }
+      const compare = await bcrypt.compare(password, findByNumber.password);
+      if (!compare) {
+        return res.status(400).json("invalid credentials");
+      }
+      const token = jwt.sign({ userID: findByNumber._id }, config.JWT_SECRET, {
+        expiresIn: "2 days",
+      });
 
-    const response = { ...defaultResponseObject };
-    response.data = { userID: user._id };
-    res.status(200).json({ response, token });
-  } catch (e) {
-    res.status(400).json(e.message);
-  }
-};
+      const response = { ...defaultResponseObject };
+      response.data = { userID: findByNumber._id };
+      res.status(200).json({ response, token });
+    } else {
+      const findByEmail = await User.findOne({ email });
+      if (!findByEmail) {
+        return res.status(404).json("no user with given Email found");
+      }
+      const compare = await bcrypt.compare(password, findByEmail.password);
+      if (!compare) {
+        return res.status(400).json("invalid credentials");
+      }
+      const token = jwt.sign({ userID: findByEmail._id }, config.JWT_SECRET, {
+        expiresIn: "2 days",
+      });
 
-export const addItem = async (req, res) => {
-  try {
-    const { name, price, description } = req.body;
-
-    const item = await new Item({
-      userID: req.user.userID,
-      name,
-      price,
-      description,
-    });
-
-    item.save();
-
-    const response = { ...defaultResponseObject };
-    response.data = item;
-    res.status(201).json(response);
+      const response = { ...defaultResponseObject };
+      response.data = { userID: findByEmail._id };
+      res.status(200).json({ response, token });
+    }
   } catch (e) {
     res.status(400).json(e.message);
   }

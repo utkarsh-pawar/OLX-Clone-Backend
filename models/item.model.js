@@ -10,12 +10,17 @@ const itemSchema = new mongoose.Schema(
     },
     name: {
       type: String,
-      required: true,
+  
     },
     price: {
       type: String,
-      required: true,
+      
     },
+    images: [
+      {
+        type: String,
+      },
+    ],
     description: {
       type: String,
     },
@@ -26,7 +31,7 @@ const itemSchema = new mongoose.Schema(
     },
     bought_by: {
       type: Schema.Types.ObjectId,
-      ref:"user"
+      ref: "user",
     },
   },
   { timestamps: true }
