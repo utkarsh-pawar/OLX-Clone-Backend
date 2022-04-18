@@ -5,7 +5,7 @@ import config from "../config/config.js";
 
 aws.config.update({
   accessKeyId: config.AWS_ACCESS_ID,
-  secretAccessKey: config.AWS_ACCESS_KEY,
+  secretAccessKey: config.MY_AWS_ACCESS_KEY,
   region: "ap-south-1",
 });
 
